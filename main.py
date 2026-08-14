@@ -7,7 +7,7 @@ from reports import show_reports
 
 ctk.set_appearance_mode("light")
 
-
+# ===================================== Load Patients =========================================================================================
 def load_patients():
         connection = sqlite3.connect("careflow.db")
         cursor = connection.cursor()
@@ -18,6 +18,8 @@ def load_patients():
         connection.close()
 
         return patients
+
+
 
 #================================== DELETE BUTTON==========================================================================
 def delete_patient(patient_id):
@@ -115,7 +117,8 @@ def update_patient(patient_id):
 
       update_button.pack(pady=25)
 
-     
+
+# ==================== Show patients =============================================================================
 # After clicking the patients button in sidebar
 def show_patients():
 
@@ -408,12 +411,37 @@ main_frame.pack(
     expand=True
 )
 
+# ================================== Load Dashboard counts ================================================================
+def load_dashboard_counts():
+     connection = sqlite3.connect("careflow.db")
+     cursor = connection.cursor()
+
+     cursor.execute("SELECT COUNT (*) FROM patients")
+     patients = cursor.fetchone()[0]
+
+     
+     cursor.execute("SELECT COUNT (*) FROM doctors")
+     doctors = cursor.fetchone()[0]
+
+     cursor.execute("SELECT COUNT (*) FROM appointments")
+     appointments = cursor.fetchone()[0]
+
+     connection.close()
+
+     return patients, doctors, appointments
+
+
 # ========================= SHOW DASHBOARD ========================================================================================================
 
 # Dashboard title
 def show_dashboard():
+     
+     # Remove everything currently showing
      for widget in main_frame.winfo_children():
           widget.destroy()
+
+     # Get the numbers from database
+     patients, doctors, appointments = load_dashboard_counts()
 
      dashboard_title = ctk.CTkLabel(
          main_frame,
@@ -466,7 +494,7 @@ def show_dashboard():
      
      patients_number = ctk.CTkLabel(
          patients_card,
-         text="0",
+         text=str(patients),
          font=("Arial", 28, "bold")
      )
      
@@ -499,7 +527,7 @@ def show_dashboard():
      
      doctors_number = ctk.CTkLabel(
          doctors_card,
-         text="0",
+         text=str(doctors),
          font=("Arial", 28, "bold")
      )
      
@@ -532,7 +560,7 @@ def show_dashboard():
      
      appointments_number = ctk.CTkLabel(
          appointments_card,
-         text="0",
+         text=str(appointments),
          font=("Arial", 28, "bold")
      )
      
