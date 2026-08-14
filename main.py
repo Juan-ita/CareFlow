@@ -5,7 +5,26 @@ from doctors import show_doctors
 from appointment import show_appointments
 from reports import show_reports
 
+from datetime import datetime
+
 ctk.set_appearance_mode("light")
+
+# ================================= LOAD TODAY'S APPOINTMENTS ======================================================================================
+def load_todays_appointments():
+     connection = sqlite3.connect("careflow.db")
+     cursor = connection.cursor()
+
+     today = datetime.now().strftime("%d/%m/%Y")
+
+     cursor.execute(
+          """
+          SELECT patient, doctor, time, status FROM appointments WHERE date = ? ORDER BY time
+          """,
+          (today,)
+     )
+     appointments = cursor.fetchall()
+     connection.close()
+     return appointments
 
 # ===================================== Load Patients =========================================================================================
 def load_patients():
@@ -14,10 +33,10 @@ def load_patients():
 
         cursor.execute("SELECT id, name, age, phone FROM patients")
 
-        patients = cursor.fetchall()
+        patient = cursor.fetchall()
         connection.close()
 
-        return patients
+        return patient
 
 
 
@@ -565,6 +584,156 @@ def show_dashboard():
      )
      
      appointments_number.pack()
+
+     # ================================= TODAY'S APPOINTMENTS ============================================================================================
+     today_title = ctk.CTkLabel(
+          main_frame,
+          text="Today's Appointments",
+          font=("Arial", 20, "bold")
+     )
+
+     today_title.pack(
+          anchor="w",
+          padx=30,
+          pady=(30,10)
+     )
+
+     todays_appointments = load_todays_appointments()
+
+     # If there are no appointments today
+     if not todays_appointments:
+          no_appointments = ctk.CTkLabel(
+               main_frame,
+               text="No appointments scheduled for today.",
+               font=("Arial", 14)
+          )
+          no_appointments.pack(
+               anchor="w",
+               padx=30,
+               pady=10
+          )
+     else:
+          # =========== Table header =======================================
+          today_header = ctk.CTkFrame(
+               main_frame,
+               fg_color="purple"
+          )
+          today_header.pack(
+               fill="x",
+               padx=30,
+               pady=(5,0)
+          )
+
+          # patient
+          ctk.CTkLabel(
+               today_header,
+               text="Patient",
+               text_color="white",
+               font=("Arial", 14, "bold"),
+               width=150
+          ).pack(
+               side="left",
+               padx=10,
+               pady=10
+          )
+
+          # Doctor
+          ctk.CTkLabel(
+               today_header,
+               text="Doctor",
+               text_color="white",
+               font=("Arial", 14, "bold"),
+               width=150
+          ).pack(
+               side="left",
+               padx=10,
+               pady=10
+          )
+
+          # Time
+          ctk.CTkLabel(
+               today_header,
+               text="Time",
+               text_color="white",
+               font=("Arial", 14, "bold"),
+               width=150
+          ).pack(
+               side="left",
+               padx=10,
+               pady=10
+          )
+
+          # status
+          ctk.CTkLabel(
+               today_header,
+               text="Status",
+               text_color="white",
+               font=("Arial", 14, "bold"),
+               width=120
+          ).pack(
+               side="left",
+               padx=10,
+               pady=10
+          )
+
+          # ==================== APPOINTMENT ROWS ==========================================================================
+          for appointment in todays_appointments:
+
+               row = ctk.CTkFrame(
+                    main_frame,
+                    fg_color="white"
+               )
+               row.pack(
+                    fill="x",
+                    padx=30,
+                    pady=2
+               )
+
+               # Patient
+               ctk.CTkLabel(
+                    row,
+                    text=appointment[0],
+                    width=150
+               ).pack(
+                    side="left",
+                    padx=10,
+                    pady=8
+               )
+
+               
+               # Doctor
+               ctk.CTkLabel(
+                    row,
+                    text=appointment[1],
+                    width=150
+               ).pack(
+                    side="left",
+                    padx=10,
+                    pady=8
+               )
+
+               # Time
+               ctk.CTkLabel(
+                    row,
+                    text=appointment[2],
+                    width=100
+               ).pack(
+                    side="left",
+                    padx=10,
+                    pady=8
+               )
+
+
+               # Status
+               ctk.CTkLabel(
+                    row,
+                    text=appointment[3],
+                    width=120
+               ).pack(
+                    side="left",
+                    padx=10,
+                    pady=8
+               )
 
 
 
