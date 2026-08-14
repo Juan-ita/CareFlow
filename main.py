@@ -736,7 +736,9 @@ def show_dashboard():
                     pady=8
                )
 
-
+# === LOGOUT===
+def logout():
+     show_login(app, show_dashboard)
 
 # ==========================================================BUTTONS==============================================================================
 # DASHBOARD BUTTON
@@ -812,6 +814,20 @@ reports_button.pack(
     fill="x" 
 )
 
+# LOGOUT BUTTON
+logout_button = ctk.CTkButton(
+     sidebar,
+     text="Logout",
+     fg_color="purple",
+     hover_color="darkviolet",
+     command=lambda: logout()
+)
+
+logout_button.pack(
+     pady=10,
+     padx=20,
+     fill="x"
+)
 
 show_login(app, show_dashboard)
 app.mainloop() # keeps the window running
