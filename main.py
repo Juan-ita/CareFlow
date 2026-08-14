@@ -4,6 +4,7 @@ import sqlite3
 from doctors import show_doctors
 from appointment import show_appointments
 from reports import show_reports
+from login import show_login
 
 from datetime import datetime
 
@@ -812,7 +813,7 @@ reports_button.pack(
 )
 
 
-show_dashboard()
+show_login(app, show_dashboard)
 app.mainloop() # keeps the window running
      
      
