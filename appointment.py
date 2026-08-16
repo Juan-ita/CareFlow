@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import sqlite3
+from datetime import datetime 
 
 # ========================== TABLE =================================================================================================
 def create_appointments_table():
@@ -132,6 +133,19 @@ def add_appointment(app, main_frame):
             error_message.configure(
                 text="Please fill in all fields."
             )
+            return
+        if not status:
+            error_message.configure(
+                text="Please select an appointment status."
+            )
+            return
+
+        try:
+            datetime.strftime(date, "%d/%m/%Y")
+        except ValueError:
+            error_message.configure(
+                text="Enter a valid date (DD/MM/YY)."
+            )    
             return
 
         connection = sqlite3.connect("careflow.db")
