@@ -456,7 +456,7 @@ def add_patient():
 app = ctk.CTk()
 
 app.title("CareFlow")
-app.geometry("800x500") # controls its wsize
+app.geometry("1000x800") # controls its wsize
 
 
 # =============================================SIDEBAR======================================================================================
@@ -554,108 +554,85 @@ def show_dashboard():
      )
      
      # ================================ CARDS========================================================
-     # Patient card
-     patients_card = ctk.CTkFrame(
-         card_frame,
-         width=200,
-         height=120,
-         fg_color="white"
-     )
-     
-     patients_card.pack(
-         side="left",
-         padx=10,
-         pady=10,
-         expand=True,
-         fill='both'
-     )
-     
-     patients_label = ctk.CTkLabel(
-         patients_card,
-         text="Registered Patients",
-         font=("Arial", 16, "bold"),
-         text_color="purple"
-     )
-     
-     patients_label.pack(pady=(20,5))
-     
-     patients_number = ctk.CTkLabel(
-         patients_card,
-         text=str(patients),
-         font=("Arial", 28, "bold")
-     )
-     
-     patients_number.pack()
-     
-     # Doctors card
-     doctors_card = ctk.CTkFrame(
-         card_frame,
-         width=200,
-         height=120,
-         fg_color="white"
-     )
-     
-     doctors_card.pack(
-         side="left",
-         padx=10,
-         pady=10,
-         expand=True,
-         fill='both'
-     )
-     
-     doctors_label = ctk.CTkLabel(
-         doctors_card,
-         text="Doctors",
-         font=("Arial", 16, "bold"),
-         text_color="purple"
-     )
-     
-     doctors_label.pack(pady=(20,5))
-     
-     doctors_number = ctk.CTkLabel(
-         doctors_card,
-         text=str(doctors),
-         font=("Arial", 28, "bold")
-     )
-     
-     doctors_number.pack()
-     
-     # Appointments card
-     appointments_card = ctk.CTkFrame(
-         card_frame,
-         width=200,
-         height=120,
-         fg_color="white"
-     )
-     
-     appointments_card.pack(
-         side="left",
-         padx=10,
-         pady=10,
-         expand=True,
-         fill='both'
-     )
-     
-     appointments_label = ctk.CTkLabel(
-         appointments_card,
-         text="Appointments",
-         font=("Arial", 16, "bold"),
-         text_color="purple"
-     )
-     
-     appointments_label.pack(pady=(20,5))
-     
-     appointments_number = ctk.CTkLabel(
-         appointments_card,
-         text=str(appointments),
-         font=("Arial", 28, "bold")
-     )
-     
-     appointments_number.pack()
 
-     # ================================ TODAY'S SUMMARY ==================================================================================================
+     def create_dashboard_card(parent, title, number):
+
+          # ======= Shadow ======
+          shadow = ctk.CTkFrame(
+               parent,
+               width=200,
+               height=130,
+               corner_radius=15,
+               fg_color="#D9D4DA"
+          )
+
+          shadow.pack(
+               side="left",
+               padx=10,
+               pady=10,
+               expand=True,
+               fill="both"
+          )
+
+          # ===== ACTUAL CARD =====
+          card = ctk.CTkFrame(
+               shadow,
+               corner_radius=15,
+               fg_color="white"
+          )
+          card.place(
+               x=0,
+               y=0,
+               relwidth=1,
+               relheight=1
+          )
+
+          # ====== CARD TITLE ======
+          title_label = ctk.CTkLabel(
+               card,
+               text=title,
+               font=("Arial", 16, "bold"),
+               text_color="purple"
+          )
+
+          title_label.pack(
+               pady=(20, 5)
+          )
+
+          # ====== CARD NUMBER =======
+          number_label = ctk.CTkLabel(
+               card,
+               text=str(number),
+               font=("Arial", 28, "bold")
+          )
+
+          number_label.pack()
+
+     # ======= PATIENT CARD ========
+     create_dashboard_card(
+          card_frame,
+          "Registered Patients",
+          patients
+     )
+     # ========== DOCTORS CARD =======
+     create_dashboard_card(
+          card_frame,
+          "Doctors",
+          doctors
+     )
+     # ========== APPOINTMENT CARD =======
+     create_dashboard_card(
+          card_frame,
+          "Appointments",
+          appointments
+     )
+
+    # ================================ TODAY'S SUMMARY ==================================================================================================
+
      pending, completed, cancelled = load_today_summary()
 
+
+     # ========= SUMMARY TITLE ======
      summary_title = ctk.CTkLabel(
           main_frame,
           text="Today's Summary",
@@ -678,83 +655,79 @@ def show_dashboard():
           fill="x"
      )
 
-     # === Pending ===
-     pending_card = ctk.CTkFrame(
+
+     def create_summary_card(parent, title, number):
+
+          # === SHADOW ===
+          shadow = ctk.CTkFrame(
+               parent,
+               width=180,
+               height=100,
+               corner_radius=15,
+               fg_color="#D9D4DA"
+          )
+
+          shadow.pack(
+               side="left",
+               padx=5,
+               pady=10,
+               expand=True,
+               fill="both"
+          )
+
+          # ====== ACTUAL CARD =======
+          card = ctk.CTkFrame(
+               shadow,
+               corner_radius=15,
+               fg_color="white"
+          )
+
+          card.place(
+               x=0,
+               y=0,
+               relwidth=1,
+               relheight=1
+          )
+
+          # ======= TITLE ========
+          ctk.CTkLabel(
+               card,
+               text=title,
+               font=("Arial", 15, "bold"),
+               text_color="purple"
+          ).pack(
+               pady=(0, 15)
+          )
+
+          # ======= NUMBER ======
+          ctk.CTkLabel(
+               card,
+               text=str(number),
+               font=("Arial", 24, "bold")
+          ).pack(
+               pady=(0, 15)
+          )
+
+     # ======= PENDING =======
+     create_summary_card(
           summary_frame,
-          fg_color="white"
+          "Pending",
+          pending
      )
-
-     pending_card.pack(
-          side="left",
-          expand=True,
-          fill="both",
-          padx=5
-     )
-     ctk.CTkLabel(
-          pending_card,
-          text="Pending",
-          font=("Arial", 15, "bold"),
-          text_color="purple"
-     ).pack(pady=(15, 5))
-
-     ctk.CTkLabel(
-          pending_card,
-          text=str(pending),
-          font=("Arial", 24, "bold")
-     ).pack(pady=(0,15))
-
      
-
-     # === Completed ===
-     completed_card = ctk.CTkFrame(
+     # ======= COMPLETED =======
+     create_summary_card(
           summary_frame,
-          fg_color="white"
+          "Completed",
+          completed
      )
-
-     completed_card.pack(
-          side="left",
-          expand=True,
-          fill="both",
-          padx=5
-     )
-     ctk.CTkLabel(
-          completed_card,
-          text="Completed",
-          font=("Arial", 15, "bold"),
-          text_color="purple"
-     ).pack(pady=(15, 5))
-
-     ctk.CTkLabel(
-          completed_card,
-          text=str(completed),
-          font=("Arial", 24, "bold")
-     ).pack(pady=(0,15))
-
-
-     # === Cancelled ===
-     cancelled_card = ctk.CTkFrame(
+     # ======= CANCELLED =======
+     create_summary_card(
           summary_frame,
-          fg_color="white"
+          "Cancelled",
+          cancelled
      )
-
-     cancelled_card.pack(
-          side="left",
-          expand=True,
-          fill="both",
-          padx=5
-     )
-     ctk.CTkLabel(
-          cancelled_card,
-          text="Completed",
-          font=("Arial", 15, "bold"),
-          text_color="purple"
-     ).pack(pady=(15, 5))
-
-     ctk.CTkLabel(
-          cancelled_card,
-          text=str(cancelled),
-          font=("Arial", 24, "bold")
-     ).pack(pady=(0,15))
+    
 
 
 

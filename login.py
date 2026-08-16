@@ -1,66 +1,109 @@
 import customtkinter as ctk
 
-
 # ======================== SHOW LOGIN ====================================
 def show_login(app, open_dashboard):
 
-    # # clear the window
-    # for widget in app.winfo_children():
-    #     widget.destroy()
-
-    # ========================== LOGIN FRAME ==================================
+    # ========================= LOGIN BACKGROUND ===============================
     login_frame = ctk.CTkFrame(
         app,
         corner_radius=0,
-        fg_color="white"
-    )     
+        fg_color="#F7F5F8"
+    )
+
     login_frame.place(
         relx=0,
         rely=0,
         relwidth=1,
         relheight=1
-    )     
-    # == LOGO ==
-    logo = ctk.CTkLabel(
-        login_frame,
-        text="CareFlow",
-        font=("Arial", 30, "bold"),
-        text_color="purple"
-    )     
-    logo.pack(pady=(40,10))     
-
-    # == SUBTITLE ==
-    subtitle = ctk.CTkLabel(
-        login_frame,
-        text="Hospital management system",
-        font=("Arial", 14)
-    )     
-    subtitle.pack(pady=(0,25))        
-
-    # == USERNAME ==
-    username_entry = ctk.CTkEntry(
-        login_frame,
-        width=250,
-        placeholder_text="Enter a username"
     )
-    username_entry.pack(pady=10)     
 
-    # == PASSWORD ==
-    password_entry = ctk.CTkEntry(
+    # ========================== LOGIN CARD ========================================
+    card = ctk.CTkFrame(
         login_frame,
-        width=250,
+        width=420,
+        height=500,
+        corner_radius=20,
+        fg_color="white"
+    )
+
+    card.place(
+        relx=0.5,
+        rely=0.5,
+        anchor="center"
+    )
+
+    # ======================================= LOGO ==========================================
+    logo = ctk.CTkLabel(
+        card,
+        text="CareFlow",
+        font=("Arial", 32, "bold"),
+        text_color="purple"
+    )
+
+    logo.pack(
+        pady=(45, 5)
+    )
+
+    # =================================== WELCOME ================================================
+    welcome = ctk.CTkLabel(
+        card,
+        text="Welcome Back",
+        font=("Arial", 20, "bold")
+    )
+
+    welcome.pack(
+        pady=(0, 5)
+    )
+
+    # ============================= INSTRUCTIONS =========================================
+    instuction = ctk.CTkLabel(
+        card,
+        text="Login to access your dashboard",
+        font=("Arial", 13),
+        text_color="gray"
+    )
+    instuction.pack(
+        pady=(0, 20)
+    )
+
+    # ============================ USERNAME ===================================
+    username_entry = ctk.CTkEntry(
+        card,
+        width=300,
+        height=40,
+        corner_radius=10,
+        placeholder_text="Username"
+    )
+
+    username_entry.pack(
+        pady=8
+    )
+
+    # ============================ PASSWORD =====================================
+    password_entry = ctk.CTkEntry(
+        card,
+        width=300,
+        height=40,
+        corner_radius=10,
         placeholder_text="Password",
         show="*"
     )
-    password_entry.pack(pady=10)     
-    # == ERROR MESSAGE ==
-    message = ctk.CTkLabel(
-        login_frame,
-        text="",
-        text_color="red"
-    )
-    message.pack(pady=5)
 
+    password_entry.pack(
+        pady=8
+    )
+
+    # =============================== ERROR MESSAGE ==========================
+    message = ctk.CTkLabel(
+        card,
+        text="",
+        text_color="red",
+        font=("Arial", 12)
+    )
+
+    message.pack(
+        pady=(5,0)
+    )
 
     # ================================ LOGIN FUNCTION =============================================================================
     def login():
@@ -73,11 +116,14 @@ def show_login(app, open_dashboard):
             message.configure(
                 text="Invalid username or password"
             )
+
     # == LOGIN BUTTON ==
     login_button = ctk.CTkButton(
-        login_frame,
+        card,
         text="Login",
-        width=290,
+        height=50,
+        width=100,
+        corner_radius=10,
         fg_color="purple",
         hover_color="darkviolet",
         command=login
