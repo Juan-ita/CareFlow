@@ -738,6 +738,10 @@ def show_dashboard():
 
 # === LOGOUT===
 def logout():
+     # Hide the side
+     sidebar.pack_forget()
+
+     # Show the login screen again
      show_login(app, show_dashboard)
 
 # ==========================================================BUTTONS==============================================================================
@@ -820,7 +824,7 @@ logout_button = ctk.CTkButton(
      text="Logout",
      fg_color="purple",
      hover_color="darkviolet",
-     command=lambda: logout()
+     command=logout
 )
 
 logout_button.pack(
