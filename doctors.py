@@ -84,10 +84,35 @@ def add_doctor(app, main_frame): # Gives the function access to the main applica
 
 
         # ==================== SAVE BUTTON ===========================================================================================
+        # Error message
+        error_message = ctk.CTkLabel(
+             form,
+             text="",
+             text_color="red"
+        )
+
         def save_doctor():
                name = name_entry.get()
                specialization = specialization_entry.get()
                phone = phone_entry.get()
+
+               if not name or not specialization or not phone:
+                    error_message.configure(
+                         text="Please fill in all fields."
+                    )
+                    return
+
+               if not phone.isdigit():
+                    error_message.configure(
+                         text="Phone number must contain numbers only."
+                    )
+                    return
+
+               if len(phone) != 10:
+                    error_message.configure(
+                         text="Phone number must be exactly 10 digits"
+                    )
+                    return
 
                connection = sqlite3.connect("careflow.db")
                cursor = connection.cursor()
