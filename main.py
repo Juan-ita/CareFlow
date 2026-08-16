@@ -175,6 +175,24 @@ def update_patient(patient_id):
 
       update_button.pack(pady=25)
 
+# ========================== CREATE PATIENTS TABLE ==========================
+def create_patients_table():
+     connection = sqlite3.connect("careflow.db")
+     cursor = connection.cursor()
+
+     cursor.execute(
+          """
+          CREATE TABLE IF NOT EXISTS patients (
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
+               name TEXT NOT NULL,
+               age INTEGER NOT NULL,
+               phone TEXT NOT NULL
+          )
+          """
+     )
+
+     connection.commit()
+     connection.close()
 
 # ==================== Show patients =============================================================================
 # After clicking the patients button in sidebar
@@ -529,6 +547,8 @@ def show_dashboard():
 
      # Get the numbers from database
      patients, doctors, appointments = load_dashboard_counts()
+
+     print("Dashboard counts:", patients, doctors, appointments)
 
      dashboard_title = ctk.CTkLabel(
          main_frame,
@@ -977,6 +997,8 @@ logout_button.pack(
      padx=20,
      fill="x"
 )
+
+create_patients_table()
 
 show_login(app, show_dashboard)
 app.mainloop() # keeps the window running

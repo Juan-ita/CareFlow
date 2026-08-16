@@ -15,7 +15,6 @@ def create_appointments_table():
           doctor TEXT NOT NULL,
           date TEXT NOT NULL,
           time TEXT NOT NULL,
-          reason TEXT NOT NULL,
           status TEXT NOT NULL
          )
         """
@@ -85,19 +84,6 @@ def add_appointment(app, main_frame):
     )
     time_entry.pack(pady=5)
 
-    # Reason
-    reason_label = ctk.CTkLabel(
-        form,
-        text="Reason"
-    )
-    reason_label.pack(pady=(20, 5))
-
-    reason_entry = ctk.CTkEntry(
-        form,
-        placeholder_text="Reason for appointment"
-    )
-    reason_entry.pack(pady=5)
-
     # Status
     status_label = ctk.CTkLabel(
         form,
@@ -126,10 +112,9 @@ def add_appointment(app, main_frame):
         doctor = doctor_entry.get()
         date = date_entry.get()
         time = time_entry.get()
-        reason = reason_entry.get()
         status = status_entry.get()
 
-        if not patient or not doctor or not date or not time or not reason:
+        if not patient or not doctor or not date or not time:
             error_message.configure(
                 text="Please fill in all fields."
             )
@@ -141,7 +126,7 @@ def add_appointment(app, main_frame):
             return
 
         try:
-            datetime.strftime(date, "%d/%m/%Y")
+            datetime.strptime(date, "%d/%m/%Y")
         except ValueError:
             error_message.configure(
                 text="Enter a valid date (DD/MM/YY)."
@@ -153,10 +138,10 @@ def add_appointment(app, main_frame):
 
         cursor.execute(
             """
-             INSERT INTO appointments (patient, doctor,date, time, reason, status)
+             INSERT INTO appointments (patient, doctor,date, time,  status)
              VALUES (?, ?, ?, ?, ?, ?)
             """,
-            (patient, doctor,date, time, reason, status)
+            (patient, doctor,date, time, status)
         )
 
         connection.commit()
@@ -185,7 +170,7 @@ def load_appointments():
     cursor = connection.cursor()
 
     cursor.execute(
-        "SELECT id, patient, doctor, date, time, reason,status FROM appointments"
+        "SELECT id, patient, doctor, date, time,status FROM appointments"
     )
 
     appointments = cursor.fetchall()
@@ -202,7 +187,7 @@ def update_appointment(appointment_id, app,  main_frame):
 
     cursor.execute(
         """
-        SELECT patient, doctor, date, time, reason, status FROM appointments WHERE id= ?
+        SELECT patient, doctor, date, time, status FROM appointments WHERE id= ?
         """,
         (appointment_id,)
     )
@@ -261,16 +246,6 @@ def update_appointment(appointment_id, app,  main_frame):
     time_entry.pack(pady=5)
     time_entry.insert(0, appointment[3])
 
-    # Reason
-    reason_label = ctk.CTkLabel(
-        form,
-        text="Reason"
-    )
-    reason_label.pack(pady=(15,5))
-
-    reason_entry = ctk.CTkEntry(form)
-    reason_entry.pack(pady=5)
-    reason_entry.insert(0, appointment[4])
 
     # status
     status_label = ctk.CTkLabel(
@@ -289,7 +264,7 @@ def update_appointment(appointment_id, app,  main_frame):
         ]
     )
     status_entry.pack(pady=5)
-    status_entry.set(appointment[5])
+    status_entry.set(appointment[4])
 
     # SAVE CHANGES
     def save_changes():
@@ -298,7 +273,6 @@ def update_appointment(appointment_id, app,  main_frame):
         doctor = doctor_entry.get()
         date = date_entry.get()
         time = time_entry.get()
-        reason = reason_entry.get()
         status = status_entry.get()
 
         connection = sqlite3.connect("careflow.db")
@@ -306,9 +280,9 @@ def update_appointment(appointment_id, app,  main_frame):
 
         cursor.execute(
             """
-            UPDATE appointments SET patient = ?, doctor = ?, date = ?, time = ?, reason = ?, status = ? WHERE id = ?
+            UPDATE appointments SET patient = ?, doctor = ?, date = ?, time = ?, status = ? WHERE id = ?
             """,
-            (patient, doctor, date, time, reason, status, appointment_id)
+            (patient, doctor, date, time, status, appointment_id)
         )
 
         connection.commit()
