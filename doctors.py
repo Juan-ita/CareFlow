@@ -42,6 +42,8 @@ def add_doctor(app, main_frame): # Gives the function access to the main applica
         form = ctk.CTkToplevel(app) # creates a small window on top of careflow
         form.title("Add Doctor")
         form.geometry("400x450")
+        form.transient(app)
+        form.grab_set()
 
         # Doctors name
         name_label = ctk.CTkLabel(
@@ -170,6 +172,8 @@ def update_doctor(doctors_id, main_frame, app):
       
        # Edit window
       form = ctk.CTkToplevel(app)
+      form.transient(app)
+      form.grab_set()
       form.title("Edit Doctor")
       form.geometry("400x450")
 

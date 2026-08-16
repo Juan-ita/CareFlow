@@ -29,6 +29,8 @@ def create_appointments_table():
 def add_appointment(app, main_frame):
 
     form = ctk.CTkToplevel(app)
+    form.transient(app)
+    form.grab_set()
     form.title("Add Appointment")
     form.geometry("400x550")
 
@@ -139,7 +141,7 @@ def add_appointment(app, main_frame):
         cursor.execute(
             """
              INSERT INTO appointments (patient, doctor,date, time,  status)
-             VALUES (?, ?, ?, ?, ?, ?)
+             VALUES (?, ?, ?, ?, ?)
             """,
             (patient, doctor,date, time, status)
         )
@@ -198,6 +200,8 @@ def update_appointment(appointment_id, app,  main_frame):
 
     # EDIT WINDOW
     form = ctk.CTkToplevel(app)
+    form.transient(app)
+    form.grab_set()
     form.title("Edit Appointment")
     form.geometry("400x550")
 
@@ -494,7 +498,7 @@ def show_appointments(main_frame, app):
         # Status
         ctk.CTkLabel(
             row,
-            text=appointment[6],
+            text=appointment[5],
             width=100
         ).pack(
             side="left",

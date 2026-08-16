@@ -111,6 +111,9 @@ def update_patient(patient_id):
       connection.close()
        # Edit window
       form = ctk.CTkToplevel(app)
+
+      form.transient(app)
+      form.grab_set()
       form.title("Edit Patient")
       form.geometry("400x400")
 
@@ -360,6 +363,8 @@ def add_patient():
     form = ctk.CTkToplevel(app)
     form.title("Add Patient")
     form.geometry("400x400")
+    form.transient(app)
+    form.grab_set()
 
     # Name
     name_label = ctk.CTkLabel(
