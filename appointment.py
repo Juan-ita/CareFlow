@@ -25,6 +25,7 @@ def create_appointments_table():
 
 
 # ======================================== FORM =======================================================================================
+
 def add_appointment(app, main_frame):
 
     form = ctk.CTkToplevel(app)
@@ -111,6 +112,13 @@ def add_appointment(app, main_frame):
     status_entry.set("Pending")
 
     # =================================== SAVE APPOINTMENT =============================================================================
+    error_message = ctk.CTkLabel(
+        form,
+        text="",
+        text_color="red"
+    )
+
+    error_message.pack(pady=5)
 
     def save_appointment():
         patient = patient_entry.get()
@@ -119,6 +127,12 @@ def add_appointment(app, main_frame):
         time = time_entry.get()
         reason = reason_entry.get()
         status = status_entry.get()
+
+        if not patient or not doctor or not date or not time or not reason:
+            error_message.configure(
+                text="Please fill in all fields."
+            )
+            return
 
         connection = sqlite3.connect("careflow.db")
         cursor = connection.cursor()
