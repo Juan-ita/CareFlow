@@ -348,10 +348,39 @@ def add_patient():
     )
     phone_entry.pack(pady=5)
 
+    # Error message
+    error_message = ctk.CTkLabel(
+         form,
+         text="",
+         text_color="red"
+    )
+
+    error_message.pack(pady=5)
+
     def save_patient():
         name = name_entry.get()
         age = age_entry.get()
         phone = phone_entry.get()
+
+        # Check for empty fields
+        if not name or not age or not phone:
+             error_message.configure(
+                  text="Please fill in all fields."
+             )
+             return
+
+        # Check that age is a number
+        if not age.isdigit():
+             error_message.configure(
+                  text="Age must be a number."
+             )
+             return
+
+        if len(phone) != 10:
+             error_message.configure(
+                  text="Phone number must be exactly 10 digits."
+             )
+             return
 
         connection = sqlite3.connect("careflow.db") # Opens the database
 
