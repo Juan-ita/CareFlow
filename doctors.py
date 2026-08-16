@@ -90,6 +90,7 @@ def add_doctor(app, main_frame): # Gives the function access to the main applica
              text="",
              text_color="red"
         )
+        error_message.pack(pad=5)
 
         def save_doctor():
                name = name_entry.get()
