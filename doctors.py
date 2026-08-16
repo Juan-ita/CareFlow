@@ -214,25 +214,52 @@ def update_doctor(doctors_id, main_frame, app):
       phone_entry.insert(0, doctor[2])
 
      # ============================ SAVE UPDATES ================================================
+      
+              # Error message
+      error_message = ctk.CTkLabel(
+             form,
+             text="",
+             text_color="red"
+        )
       def save_changes():
         name = name_entry.get()
         specialization = specialization_entry.get()
         phone = phone_entry.get()
 
+        if not name or not specialization or not phone:
+                      error_message.configure(
+                           text="Please fill in all fields."
+                      )
+                      return
+  
+        if not phone.isdigit():
+                      error_message.configure(
+                           text="Phone number must contain numbers only."
+                      )
+                      return
+  
+        if len(phone) != 10:
+                      error_message.configure(
+                           text="Phone number must be exactly 10 digits"
+                      )
+                      return
+          
+          
+  
         connection = sqlite3.connect("careflow.db") # Opens the database
-
+  
         cursor = connection.cursor()
-
+  
         cursor.execute(
-            "UPDATE doctors SET name = ?, specialization = ?, phone = ? WHERE id = ?",
-            (name, specialization, phone, doctors_id)
-        )
-
+              "UPDATE doctors SET name = ?, specialization = ?, phone = ? WHERE id = ?",
+              (name, specialization, phone, doctors_id)
+          )
+  
         connection.commit()
         connection.close()
-
+  
         print("Doctor updated")
-
+  
         show_doctors(main_frame, app)
         form.destroy()
 
