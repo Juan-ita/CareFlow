@@ -27,6 +27,44 @@ def load_todays_appointments():
      connection.close()
      return appointments
 
+# ========================================= LOAD TODAY'S APPOINTMENT SUMMARY =====================================================================
+def load_today_summary():
+     connection = sqlite3.connect("careflow.db")
+     cursor = connection.cursor()
+
+     today = datetime.now().strftime("%d/%m/%Y")
+
+     cursor.execute(
+          """ SELECT COUNT (*) FROM appointments
+          WHERE date =? AND status = ?
+          """,
+          (today, "Pending")
+     )
+     pending = cursor.fetchone()[0]
+
+     # Completed appointments today
+     cursor.execute(
+          """ SELECT COUNT (*) FROM appointments WHERE date = ? AND status = ?
+          """,
+          (today, "Completed")
+     )
+     complete = cursor.fetchone()[0]
+
+     
+     # Cancelled appointments today
+     cursor.execute(
+          """ SELECT COUNT (*) FROM appointments WHERE date = ? AND status = ?
+          """,
+          (today, "Cancelled")
+     )
+     cancelled = cursor.fetchone()[0]
+
+     connection.close()
+
+     return pending, complete, cancelled
+
+
+
 # ===================================== Load Patients =========================================================================================
 def load_patients():
         connection = sqlite3.connect("careflow.db")
@@ -614,6 +652,111 @@ def show_dashboard():
      )
      
      appointments_number.pack()
+
+     # ================================ TODAY'S SUMMARY ==================================================================================================
+     pending, completed, cancelled = load_today_summary()
+
+     summary_title = ctk.CTkLabel(
+          main_frame,
+          text="Today's Summary",
+          font=("Arial", 20, "bold")
+     )
+
+     summary_title.pack(
+          anchor ="w",
+          padx=30,
+          pady=(30,10)
+     )
+
+     summary_frame = ctk.CTkFrame(
+          main_frame,
+          fg_color="transparent"
+     )
+
+     summary_frame.pack(
+          padx=30,
+          fill="x"
+     )
+
+     # === Pending ===
+     pending_card = ctk.CTkFrame(
+          summary_frame,
+          fg_color="white"
+     )
+
+     pending_card.pack(
+          side="left",
+          expand=True,
+          fill="both",
+          padx=5
+     )
+     ctk.CTkLabel(
+          pending_card,
+          text="Pending",
+          font=("Arial", 15, "bold"),
+          text_color="purple"
+     ).pack(pady=(15, 5))
+
+     ctk.CTkLabel(
+          pending_card,
+          text=str(pending),
+          font=("Arial", 24, "bold")
+     ).pack(pady=(0,15))
+
+     
+
+     # === Completed ===
+     completed_card = ctk.CTkFrame(
+          summary_frame,
+          fg_color="white"
+     )
+
+     completed_card.pack(
+          side="left",
+          expand=True,
+          fill="both",
+          padx=5
+     )
+     ctk.CTkLabel(
+          completed_card,
+          text="Completed",
+          font=("Arial", 15, "bold"),
+          text_color="purple"
+     ).pack(pady=(15, 5))
+
+     ctk.CTkLabel(
+          completed_card,
+          text=str(completed),
+          font=("Arial", 24, "bold")
+     ).pack(pady=(0,15))
+
+
+     # === Cancelled ===
+     cancelled_card = ctk.CTkFrame(
+          summary_frame,
+          fg_color="white"
+     )
+
+     cancelled_card.pack(
+          side="left",
+          expand=True,
+          fill="both",
+          padx=5
+     )
+     ctk.CTkLabel(
+          cancelled_card,
+          text="Completed",
+          font=("Arial", 15, "bold"),
+          text_color="purple"
+     ).pack(pady=(15, 5))
+
+     ctk.CTkLabel(
+          cancelled_card,
+          text=str(cancelled),
+          font=("Arial", 24, "bold")
+     ).pack(pady=(0,15))
+
+
 
      # ================================= TODAY'S APPOINTMENTS ============================================================================================
      today_title = ctk.CTkLabel(
